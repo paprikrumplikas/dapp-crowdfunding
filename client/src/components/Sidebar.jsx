@@ -22,7 +22,7 @@ const Icon = ({ styles, name, imgUrl, isActive, disabled, handleClick }) => (
             <img
                 src={imgUrl}
                 alt="fund-logo"
-                className={`w-1/2 h-1/2 ${isActive !== name && 'greyscale'}`}
+                className={`w-1/2 h-1/2 ${isActive !== name && 'grayscale'}`}
             />
         )}
     </div >

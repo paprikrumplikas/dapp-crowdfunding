@@ -1,8 +1,124 @@
-import React from 'react'
+import React, { useState } from 'react';
+import { Link, useNavigate } from "react-router-dom";
+
+import { CustomButton } from "./";
+import { logo, menu, search, thirdweb } from "../assets";
+import { navlinks } from "../constants";
 
 const Navbar = () => {
+    const navigate = useNavigate();
+    const [isActive, setIsActive] = useState('dashboard');
+    const [toggleDrawer, setToggleDrawer] = useState(false);
+
+    const address = "0x123";
+
+
     return (
-        <div>Navbar</div>
+        <div className='flex md:flex-row flex-col-reverse justify-between mb-[35px] gap-6'>
+
+            {/** Wrapper for the input field + search icon combo*/}
+            <div className='lg:flex-1 flex flex-row max-w-[458px] py-2 pl-4 pr-2 h-[52px] bg-[#1c1c24]'>
+                {/** Input field */}
+                <input type="text" placeholder="Search for campaigns" className='flex w-full font-epilogue font-normal text-[14px] placeholder:text-[#4b5264] text-white bg-transparent outline-none' />
+                {/** Wrapper for the search icon img */}
+                <div className='w-[72px] h-full rounded-[20px] bg-[#4acd8d] flex justify-center items-center cursor-pointer'>
+                    <img
+                        src={search}
+                        alt="search"
+                        className='w-[15px] h-[15px] object-contain'
+                    />
+                </div>
+            </div>
+
+            {/** Wrapper for Button on the right. By default, it is gonna be hidden by appears on small and larger devs. justify.end pushes children to the left*/}
+            <div className='sm:flex hidden flex-row justify-end gap-4'>
+                <CustomButton
+                    btnType="button"
+                    title={address ? 'Create a campaign' : 'Connect wallet'}
+                    styles={address ? 'bg-[#1dc071]' : 'bg-[#8c6dfd]'}
+                    handleClick={() => {
+                        if (address) navigate('create-campaign')
+                        else 'connect()'
+                    }}
+                />
+
+                <Link to="/profile">
+                    <div className='w-[52px] h-[52px] rounded-full bg-[#2c2f32] flex justify-center items-center cursor-pointer'>
+                        <img
+                            src={thirdweb}
+                            alt="user"
+                            className='w-[60%] h-[60%] object-contain'
+                        />
+                    </div>
+                </Link>
+            </div>
+
+            {/** MOBILE MENU @learning */}
+            <div className='sm:hidden flex justify-between items-center relative'>
+                {/** user profile icon */}
+                <div className='w-[40px] h-[40px] rounded-[10px] bg-[#2c2f32] flex justify-center items-center cursor-pointer'>
+                    <img
+                        src={thirdweb}
+                        alt="user"
+                        className='w-[60%] h-[60%] object-contain'
+                    />
+                </div>
+
+                {/** hamburger menu icon on the right */}
+                <img
+                    src={menu}
+                    alt="menu"
+                    className='w-[34px] h-[34px] object-contain cursor-pointer'
+                    onClick={() => setToggleDrawer((prev) => (!prev))}
+                />
+
+                {/** dropdown menu for mobile. @learning it behaves differently than the other children. Parents's justify-between does not apply to it, its absolut positioning takes it out of the normal document flow.
+                 * If toggleDrawer is not active, its with is 0 */}
+                {/** @learning It spans the full width of its container (right-0 left-0 */}
+                {/** It has a z-index of 10 to ensure it appears above other elements.  */}
+                {/** When toggleDrawer is false, it translates the menu upwards by 100vh (full viewport height), effectively hiding it off-screen. */}
+                <div className={`absolute top-[60px] right-0 left-0 bg-[#1c1c24] z-10 shadow-secondary py-4 ${!toggleDrawer ? '-translate-y-[100vh]' : 'translate-y-0'} transition-all duration-700`}>
+
+                    {/** list of mobile menu items */}
+                    <ul className='mb-4'>
+                        {navlinks.map((link) => (
+                            <li
+                                key={link.name}
+                                className={`flex p-4 ${isActive === link.name && 'bg-[#3a3a43]'}`}
+                                onClick={() => {
+                                    setIsActive(link.name);
+                                    setToggleDrawer(false);
+                                    navigate(link.link);
+                                }}
+                            >
+                                {/** mobile menu item icon */}
+                                <img
+                                    src={link.imgUrl}
+                                    alt={link.name}
+                                    className={`w-[24px] h-[24px] object-contain ${isActive === link.name ? 'grayscale-0' : 'grayscale'}`}
+                                />
+                                {/** mobile menu item name */}
+                                <p className={`ml-[20px] font-epilogue font-semibold text-[14px] ${isActive === link.name ? 'text-[#1dc071]' : 'text-[#808191]'}`}>{link.name}</p>
+                            </li>
+                        ))}
+                    </ul>
+
+                    <div className='flex mx-4'>
+                        <CustomButton
+                            btnType="button"
+                            title={address ? 'Create a campaign' : 'Connect wallet'}
+                            styles={address ? 'bg-[#1dc071]' : 'bg-[#8c6dfd]'}
+                            handleClick={() => {
+                                if (address) navigate('create-campaign')
+                                else 'connect()'
+                            }}
+                        />
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
     )
 }
 
