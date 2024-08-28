@@ -124,9 +124,6 @@ const CreateCampaign = () => {
                     />
                 </div>
             </form>
-
-
-
         </div>
     )
 }
