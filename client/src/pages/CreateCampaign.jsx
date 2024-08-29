@@ -5,10 +5,16 @@ import { ethers } from "ethers";
 
 import { money } from "../assets";
 import { CustomButton } from '../components';
-//import { CheckIfImage } from "../utils";
+import { checkIfImage } from "../utils";
 import FormField from '../components/FormField';
+import { useStateContext } from '../context';
+
+
 
 const CreateCampaign = () => {
+    //get stuff from the context
+    const { CreateCampaign } = useStateContext();
+
     const navigate = useNavigate();
 
     const [isLoading, setIsLoading] = useState(false);
@@ -25,15 +31,34 @@ const CreateCampaign = () => {
     //takes an event as param
     const handleFormFieldChange = (fieldName, e) => {
         // first spread out the form, then change ONLY the special name of the field that changed
-        setForm({ ...form, [fieldName]: e.target.value })
+        setForm({ ...form, [fieldName]: e.target.value });
     }
 
 
     // submission happens instantly as of our button is of type "submit"
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         // @learning to prevent reloading the page after form submission. In react, we never want this
         e.preventDefault();
         console.log(form);
+
+        // check if image url is valid
+        checkIfImage(form.image, async (exists) => {
+            if (exists) {
+                // set loading
+                setIsLoading(true);
+
+                //  @note @crucial @learning first we spread the form, than we change the target
+                await CreateCampaign({ ...form, target: ethers.utils.parseUnits(form.target, 18) });
+
+                setIsLoading(false);
+                navigate("/");
+            } else {
+                alert("Provide valid image url!");
+                // clear the url
+                setForm({ ...form, image: "" });
+            }
+        })
+
     };
 
 

@@ -3,17 +3,19 @@
 
 import React, { useContext, createContext } from "react";
 
-import { useAddress, useContract, useMetamask, useContractWrite } from "thirdweb/react";
+import { useAddress, useContract, useMetamask, useContractWrite } from "@thirdweb-dev/react";
+
+//import { ethers6Adapter } from "@thirdweb-dev/react";
 import { ethers } from "ethers";
 
 // Creates a context object.  Context in React provides a way to pass data through the component tree without having to pass props down manually at every level.
-const stateContext = createContext();
+const StateContext = createContext();
 
 
 // @learning children: allows us to wrap the entire app with the context provider but still render all the children that are inside of it
 export const StateContextProvider = ({ children }) => {
     /** everything we need to interact with out smart contract */
-    const contract = useContract("0xBa0Cf034b5e50499A845bba5597Ee02354041F31");
+    const { contract } = useContract("0xBa0Cf034b5e50499A845bba5597Ee02354041F31");
     const { mutateAsync: createCampaign } = useContractWrite(contract, "CreateCampaign");
     const address = useAddress();
     const connect = useMetamask();     // with this, we can connect a wallet
@@ -29,30 +31,31 @@ export const StateContextProvider = ({ children }) => {
                     form.title,
                     form.description,
                     form.target,
-                    new Date(form, deadline).getTime(),
+                    new Date(form.deadline).getTime(),
                     form.image
                 ]
             }))
 
             console.log("Contract call success", data);
         } catch (error) {
-            console.log("Contract call failure", data);
+            console.log("Contract call failure", error);
         }
     }
 
     return (
-        <StateContextProvider
+        <StateContext.Provider
             value={{
                 address,
                 contract,
-                createCampaign: pusblishCampaign // renaming publichCampaign to cC
+                connect,
+                createCampaign: publishCampaign // renaming publichCampaign to cC
             }}
         >
             {/** @crucial rendering children here */}
             {children}
-        </StateContextProvider>
+        </StateContext.Provider>
     )
 }
 
 // @crucial so that we can use it
-export const useStateContext = () => useContext(stateContext);
+export const useStateContext = () => useContext(StateContext);

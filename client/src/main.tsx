@@ -3,7 +3,7 @@
 
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { ThirdwebProvider } from "thirdweb/react";
+import { ThirdwebProvider } from "@thirdweb-dev/react";
 import { BrowserRouter as Router } from "react-router-dom";
 
 import App from "./App";
@@ -13,7 +13,7 @@ import { StateContextProvider } from "./context";
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <ThirdwebProvider>
+    <ThirdwebProvider activeChain="sepolia">
       <Router>
         <StateContextProvider>
           <App />
