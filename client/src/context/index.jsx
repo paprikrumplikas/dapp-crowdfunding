@@ -3,7 +3,7 @@
 
 import React, { useContext, createContext } from "react";
 
-import { useAddress, useContract, useMetamask, useContractWrite } from "@thirdweb-dev/react";
+import { useAddress, useContract, useConnect, useContractWrite } from "@thirdweb-dev/react";
 
 //import { ethers6Adapter } from "@thirdweb-dev/react";
 import { ethers } from "ethers";
@@ -16,9 +16,11 @@ const StateContext = createContext();
 export const StateContextProvider = ({ children }) => {
     /** everything we need to interact with out smart contract */
     const { contract } = useContract("0xBa0Cf034b5e50499A845bba5597Ee02354041F31");
-    const { mutateAsync: createCampaign } = useContractWrite(contract, "CreateCampaign");
+    const { mutateAsync: createCampaign } = useContractWrite(contract, "createCampaign");
     const address = useAddress();
-    const connect = useMetamask();     // with this, we can connect a wallet
+    // with this, we can connect a wallet. @note @learning useMetamask() is depracated
+    // with useConnect, we need to specify the wallet, like useConnect(metamaskWallet())
+    const connect = useConnect();
 
 
     const publishCampaign = async (form) => {
@@ -42,13 +44,46 @@ export const StateContextProvider = ({ children }) => {
         }
     }
 
+
+    const getCampaigns = async () => {
+        // @note @learning way to call a read function
+        const campaigns = await contract.call('getCampaigns');
+
+        // format to filter out only relevant data and format it.
+        // immediately returns and object, hence why => ({})
+        // @learning @syntax i is for index
+        const parsedCampaigns = campaigns.map((campaign, i) => ({
+            owner: campaign.owner,
+            title: campaign.title,
+            description: campaign.description,
+            target: ethers.utils.formatEther(campaign.target.toString()),
+            deadline: campaign.deadline.toNumber(),
+            amountCollected: ethers.utils.formatEther(campaign.amountCollected.toString()),
+            image: campaign.image,
+            pId: i // project id is the index
+        }));
+
+        return parsedCampaigns;
+    }
+
+
+    const getUserCampaigns = async () => {
+        const allCampaigns = await getCampaigns();
+        const filteredCampaigns = allCampaigns.filter((campaign) => campaign.owner === address);
+
+        return filteredCampaigns;
+    }
+
+
     return (
         <StateContext.Provider
             value={{
                 address,
                 contract,
                 connect,
-                createCampaign: publishCampaign // renaming publichCampaign to cC
+                createCampaign: publishCampaign, // renaming publichCampaign to cC
+                getCampaigns,
+                getUserCampaigns,
             }}
         >
             {/** @crucial rendering children here */}

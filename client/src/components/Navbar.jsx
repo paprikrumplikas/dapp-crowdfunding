@@ -6,6 +6,7 @@ import { logo, menu, search, thirdweb } from "../assets";
 import { navlinks } from "../constants";
 
 import { useStateContext } from '../context';
+import { metamaskWallet } from '@thirdweb-dev/react';
 
 const Navbar = () => {
     const { connect, address } = useStateContext();
@@ -20,7 +21,7 @@ const Navbar = () => {
         <div className='flex md:flex-row flex-col-reverse justify-between mb-[35px] gap-6'>
 
             {/** Wrapper for the input field + search icon combo*/}
-            <div className='lg:flex-1 flex flex-row max-w-[458px] py-2 pl-4 pr-2 h-[52px] bg-[#1c1c24]'>
+            <div className='lg:flex-1 flex flex-row max-w-[458px] py-2 pl-4 pr-2 h-[52px] bg-[#1c1c24] rounded-full'>
                 {/** Input field */}
                 <input type="text" placeholder="Search for campaigns" className='flex w-full font-epilogue font-normal text-[14px] placeholder:text-[#4b5264] text-white bg-transparent outline-none' />
                 {/** Wrapper for the search icon img */}
@@ -41,7 +42,7 @@ const Navbar = () => {
                     styles={address ? 'bg-[#1dc071]' : 'bg-[#8c6dfd]'}
                     handleClick={() => {
                         if (address) navigate('create-campaign')
-                        else connect();
+                        else connect(metamaskWallet());
                     }}
                 />
 
@@ -113,7 +114,7 @@ const Navbar = () => {
                             styles={address ? 'bg-[#1dc071]' : 'bg-[#8c6dfd]'}
                             handleClick={() => {
                                 if (address) navigate('create-campaign')
-                                else connect();
+                                else connect(metamaskWallet());
                             }}
                         />
 

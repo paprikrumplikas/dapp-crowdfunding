@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { ethers } from "ethers";
@@ -12,8 +12,7 @@ import { useStateContext } from '../context';
 
 
 const CreateCampaign = () => {
-    //get stuff from the context
-    const { CreateCampaign } = useStateContext();
+    const { createCampaign, address } = useStateContext();
 
     const navigate = useNavigate();
 
@@ -27,8 +26,22 @@ const CreateCampaign = () => {
         image: "",
     })
 
-    // @crucial @learning setting form data to the state. 
-    //takes an event as param
+    // @custom to keep form data until there is a submission
+    useEffect(() => {
+        // Load form data from localStorage when component mounts
+        const savedForm = localStorage.getItem(`campaignForm_${address}`);
+        if (savedForm) {
+            setForm(JSON.parse(savedForm));
+        }
+    }, [address]);
+
+    // @custom
+    useEffect(() => {
+        // Save form data to localStorage whenever it changes
+        localStorage.setItem(`campaignForm_${address}`, JSON.stringify(form));
+    }, [form, address]);
+
+    // whenever a form field is changing, update the form
     const handleFormFieldChange = (fieldName, e) => {
         // first spread out the form, then change ONLY the special name of the field that changed
         setForm({ ...form, [fieldName]: e.target.value });
@@ -46,12 +59,17 @@ const CreateCampaign = () => {
             if (exists) {
                 // set loading
                 setIsLoading(true);
-
-                //  @note @crucial @learning first we spread the form, than we change the target
-                await CreateCampaign({ ...form, target: ethers.utils.parseUnits(form.target, 18) });
-
-                setIsLoading(false);
-                navigate("/");
+                try {
+                    await createCampaign({ ...form, target: ethers.utils.parseUnits(form.target, 18) });
+                    // @custom Clear the form data from localStorage after successful submission
+                    localStorage.removeItem(`campaignForm_${address}`);
+                    setIsLoading(false);
+                    navigate("/");
+                } catch (error) {
+                    console.error("Campaign creation failed:", error);
+                    setIsLoading(false);
+                    alert("Campaign creation failed. Please try again.");
+                }
             } else {
                 alert("Provide valid image url!");
                 // clear the url
@@ -102,7 +120,7 @@ const CreateCampaign = () => {
                 />
 
                 {/** Banner */}
-                <div className='w-full flex justify-start items-center p-4 bg-[#8c6dfd] h-[120px] rounded-[10px]'>
+                <div className='w-full flex justify-center items-center p-4 bg-[#8c6dfd] h-[120px] rounded-[10px]'>
                     <img
                         src={money}
                         alt="money"
@@ -153,4 +171,4 @@ const CreateCampaign = () => {
     )
 }
 
-export default CreateCampaign
+export default CreateCampaign;
