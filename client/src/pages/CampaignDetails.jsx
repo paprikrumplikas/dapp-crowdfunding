@@ -9,19 +9,23 @@ import { calculateBarPercentage, daysLeft } from '../utils';
 import { thirdweb } from "../assets";
 import { CountBox, Loader } from "../components";
 
+import { loader } from '../assets';
+
 
 const CampaignDetails = () => {
     const navigate = useNavigate();
-    // @learning from the location we are picking up the state we sent via routing
+    // @learning @crucial from the location we are picking up the state we sent via routing
     const { state } = useLocation();
     // console.log(state);
 
-    const { getDonations, contract, address, donate } = useStateContext();
+    const { getDonations, contract, address, donate, getCampaigns } = useStateContext();
 
     // comp local states
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);  // this is more like tx pending
+    const [isDataLoading, setIsDataLoading] = useState(false); // this is more like data read is pending
     const [amount, setAmount] = useState('');
     const [donators, setDonators] = useState([]);
+    const [campaignCount, setCampaignCount] = useState(null);
 
     const remainingDays = daysLeft(state.deadline);
 
@@ -29,6 +33,41 @@ const CampaignDetails = () => {
         const data = await getDonations(state.pId);
         setDonators(data);
     }
+
+    // @custom so we dont have a silly hardcoded value
+    // @crucial this needs to be called in a useEffect that can update when contract gets available
+    const getNumberOfCampaignsByOwnerOfCurrentCampaign = async () => {
+        if (!contract) {
+            setIsDataLoading(true);
+            return 'Loading campaign count...';
+        }
+        try {
+            const allCampaigns = await getCampaigns();
+            const totalCampaignsByUser = allCampaigns.filter((campaign) => campaign.owner === state.owner);
+            setIsDataLoading(false);
+
+            return `${totalCampaignsByUser.length} campaign(s)`;
+        } catch (error) {
+            console.error("Error fetching campaign count:", error);
+            return 'Error';
+        }
+    }
+
+
+    useEffect(() => {
+        const fetchCampaignCount = async () => {
+            try {
+                const count = await getNumberOfCampaignsByOwnerOfCurrentCampaign();
+                setCampaignCount(count);
+            } catch (error) {
+                console.error("Error fetching campaign count:", error);
+                setCampaignCount('Error');
+            }
+        };
+
+        fetchCampaignCount();
+    }, [contract]);
+
 
     useEffect(() => {
         if (contract) {
@@ -98,7 +137,19 @@ const CampaignDetails = () => {
                             {/** container for stats */}
                             <div>
                                 <h4 className='font-epilogue font-semibold text-[14px] text-white break-all'>{state.owner}</h4>
-                                <p className='mt-[4px] font-epilogue font-normal text-[12px] text-[#808191]'>10 campaigns</p>
+                                <div className='flex flex-row items-center'>
+                                    <p className='mt-[4px] font-epilogue font-normal text-[12px] text-[#808191]'>
+                                        {/** If isLoading, then show the loading img */}
+                                        {campaignCount}
+                                    </p>
+                                    {isDataLoading && (
+                                        <img
+                                            src={loader}
+                                            alt="loader"
+                                            className='w-[20px] h-[20px] object-contain'
+                                        />
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -118,7 +169,7 @@ const CampaignDetails = () => {
                         {/** wrapper div */}
                         <div className='mt-[20px] flex flex-col p-4 bg-[#1c1c24] rounded-[10px]'>
                             <p className='font-epilogue font-medium text-[20px] leading-[30px] text-center text-[#808191]'>
-                                Fund the campaign
+                                Fund the campaign 🌱
                             </p>
 
                             <div className='mt-[30px]'>

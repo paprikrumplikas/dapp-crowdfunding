@@ -8,10 +8,10 @@ import { useStateContext } from '../context';   // @custom for search func
 
 
 
-const DisplayCampaigns = ({ title, isLoading, campaigns }) => {
+const DisplayCampaigns = ({ title, isLoading, campaigns, activeOrClosed }) => {
 
     const navigate = useNavigate();
-    const { searchResults, searchMade, setSearchMade } = useStateContext()
+    const { searchResults, searchMade } = useStateContext()
 
     // @learning => () results in implicit return: return a vlaue without explicitly using the return keyword
     const formatForUrl = (str) => (
@@ -34,8 +34,21 @@ const DisplayCampaigns = ({ title, isLoading, campaigns }) => {
     }
 
     // @custom
+    const currentDate = new Date();
+    const isActive = (campaign) => new Date(campaign.deadline) > currentDate;
+
+    const activeCampaigns = campaigns.filter(isActive);
+    // console.log("active campaigns length:", activeCampaigns.length);
+    const closedCampaigns = campaigns.filter(campaign => !isActive(campaign));
+    const activeSearchResults = searchResults.filter(isActive);
+    const closedSearchResults = searchResults.filter(campaign => !isActive(campaign));
+
     // @crucial @learning display either the search results or all campaigns, depending on whether a search has been made
-    const campaignsToDisplay = searchMade ? searchResults : campaigns;
+    // The campaignsToDisplay ternary operator first checks if a search was made.
+    // If a search was made, it then checks if we're displaying active or closed campaigns.
+    const campaignsToDisplay = searchMade
+        ? (activeOrClosed === "active" ? activeSearchResults : closedSearchResults)
+        : (activeOrClosed === "active" ? activeCampaigns : closedCampaigns);
 
 
     return (
@@ -56,10 +69,10 @@ const DisplayCampaigns = ({ title, isLoading, campaigns }) => {
                 )}
 
                 {/** @custom, for search functionality */}
-                {/** If it is not loading and the length is 0, display that there are no campaigns */}
+                {/** If there are campaigns but none in campaignsToDisplay */}
                 {!isLoading && campaigns.length > 0 && campaignsToDisplay.length === 0 && (
                     <p className='font-epilogue font-semibold text-[14px] leading-[30px] text-[#818183]'>
-                        No campaigns matched your search.
+                        {closedCampaigns.length > 0 ? "There are no closed campaigns to list." : (searchMade ? "No campaigns matched your search." : "There are no closed campaigns to list.")}
                     </p>
                 )}
 

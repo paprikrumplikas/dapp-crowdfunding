@@ -29,11 +29,22 @@ const Home = () => {
 
     // displays are similar on the Home and Profile pages so we created a reusable component
     return (
-        <DisplayCampaigns
-            title={!searchMade ? "All active campaigns" : "Search results"}
-            isLoading={isLoading}
-            campaigns={campaigns}
-        />
+        <div className='flex flex-col'>
+            <DisplayCampaigns
+                title={!searchMade ? "All active campaigns" : "Search results - in active campaigns"}
+                isLoading={isLoading}
+                campaigns={campaigns}
+                activeOrClosed="active"
+            />
+            {/** @custom to deisplay active and old campaigns separately */}
+            <hr className="my-[80px] border-t border-white my-4" />
+            <DisplayCampaigns
+                title={!searchMade ? "Closed campaigns" : "Search results - in closed campaigns"}
+                isLoading={isLoading}
+                campaigns={campaigns}
+                activeOrClosed="closed"
+            />
+        </div>
     )
 }
 

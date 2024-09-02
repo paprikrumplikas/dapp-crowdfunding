@@ -36,12 +36,24 @@ const Profile = () => {
 
     // displays are similar on the Home and Profile pages so we created a reusable component
     return (
-        <DisplayCampaigns
-            // @custom @crucial not the ? after the address
-            title={address?.toLowerCase() === addr.toLowerCase() ? "Your campaigns" : `Campaigns created by ${addr}`}
-            isLoading={isLoading}
-            campaigns={campaigns}
-        />
+        <div className='flex flex-col'>
+            <DisplayCampaigns
+                // @custom @crucial not the ? after the address
+                title={address?.toLowerCase() === addr.toLowerCase() ? "Your active campaigns" : `Active campaigns created by ${addr}`}
+                isLoading={isLoading}
+                campaigns={campaigns}
+                activeOrClosed="active"
+            />
+            <hr className="my-[80px] border-t border-white my-4" />
+            <DisplayCampaigns
+                // @custom @crucial not the ? after the address
+                title={address?.toLowerCase() === addr.toLowerCase() ? "Your closed campaigns" : `Closed campaigns created by ${addr}`}
+                isLoading={isLoading}
+                campaigns={campaigns}
+                activeOrClosed="closed"
+
+            />
+        </div>
     )
 }
 
