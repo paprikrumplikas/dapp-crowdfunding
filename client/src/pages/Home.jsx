@@ -8,7 +8,7 @@ const Home = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [campaigns, setCampaigns] = useState([]);
 
-    const { address, contract, getCampaigns } = useStateContext();
+    const { address, contract, getCampaigns, searchMade } = useStateContext();
 
 
     // @note @learning nedded as cannot call an async function immediately within a useEffect (cannot await)
@@ -30,7 +30,7 @@ const Home = () => {
     // displays are similar on the Home and Profile pages so we created a reusable component
     return (
         <DisplayCampaigns
-            title="All campaigns"
+            title={!searchMade ? "All campaigns" : "Search results"}
             isLoading={isLoading}
             campaigns={campaigns}
         />

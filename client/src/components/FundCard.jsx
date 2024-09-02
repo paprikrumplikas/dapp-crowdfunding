@@ -19,7 +19,6 @@ const FundCard = ({ owner, title, description, target, deadline, amountCollected
 
             {/** Wrapper for the contect */}
             <div className='flex flex-col p-4'>
-
                 {/** block for the category image and category */}
                 <div className='flex flex-row items-center mb-[18px]'>
                     <img
@@ -27,11 +26,16 @@ const FundCard = ({ owner, title, description, target, deadline, amountCollected
                         alt="tag"
                         className='w-[17px] h-[17px] object-contain'
                     />
-
                     <p className='ml-[12px] mt-[2px] font-epilogue font-medium text-[12px] text-[#808191]'>Fun</p>
                 </div>
 
-
+                {/** block for funding status bar*/}
+                <div className='relative w-full h-[5px] bg-[#3a3a43] mb-4'>
+                    <div
+                        className='absolute h-full bg-[#4acd8d]'
+                        style={{ width: `${calculateBarPercentage(target, amountCollected)}%`, maxWidth: '100%' }}>
+                    </div>
+                </div>
 
                 {/** block for the title and decsitption*/}
                 <div className='block'>

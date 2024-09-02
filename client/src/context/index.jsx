@@ -1,7 +1,7 @@
 // contains all web3-related logic
 // whole app will need to be wrapped with this context so every page can use it
 
-import React, { useContext, createContext } from "react";
+import React, { useContext, createContext, useState } from "react";
 
 import { useAddress, useContract, useConnect, useContractWrite } from "@thirdweb-dev/react";
 
@@ -21,6 +21,9 @@ export const StateContextProvider = ({ children }) => {
     // with this, we can connect a wallet. @note @learning useMetamask() is depracated
     // with useConnect, we need to specify the wallet, like useConnect(metamaskWallet())
     const connect = useConnect();
+
+    const [searchResults, setSearchResults] = useState([]); // @custom needed for the search functionality
+    const [searchMade, setSearchMade] = useState(false); // @custom needed for the search functionality
 
 
     const publishCampaign = async (form) => {
@@ -111,6 +114,8 @@ export const StateContextProvider = ({ children }) => {
                 getUserCampaigns,
                 donate,
                 getDonations,
+                searchResults, setSearchResults,
+                searchMade, setSearchMade,
             }}
         >
             {/** @crucial rendering children here */}

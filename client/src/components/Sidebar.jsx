@@ -7,11 +7,17 @@ import { Link, useNavigate } from 'react-router-dom';
 import { logo, sun } from '../assets';
 import { navlinks } from "../constants";
 
+import { useStateContext } from "../context";
+
+
 const Icon = ({ styles, name, imgUrl, isActive, disabled, handleClick }) => (
     // if Active, we give it a special background color
     // if not disabled, cursor changes to pointer
     // @learning : for the home icon, a different size is specified in the styles prop. Here, the styles prop is applied last in the className string and, hence, overwrites the default
-    <div className={`w-[48px] h-[48px] rounded-[10px] ${isActive && isActive === name && 'bg-[#2c2f32]'} flex justify-center items-center ${!disabled && 'cursor-pointer'} ${styles}`} onClick={handleClick}>
+    <div
+        className={`w-[48px] h-[48px] rounded-[10px] ${isActive && isActive === name && 'bg-[#2c2f32]'} flex justify-center items-center ${!disabled && 'cursor-pointer'} ${styles}`}
+        onClick={handleClick}
+    >
         {!isActive ? (
             <img
                 src={imgUrl}
@@ -30,17 +36,24 @@ const Icon = ({ styles, name, imgUrl, isActive, disabled, handleClick }) => (
 )
 
 
-
-
+// @note not displayed on small devices
 const Sidebar = () => {
     const navigate = useNavigate();
+    const { setSearchMade } = useStateContext();
     const [isActive, setIsActive] = useState('dashboard');
+
+    // @custom associated with search functionality, needed so if we click the home icon, all campaigns get displayed, not only the search results
+    const handleHomeClick = () => {
+        setIsActive('dashboard');
+        setSearchMade(false); // Reset searchMade to false
+    };
 
     return (
         // Wrapper for the whole sidebar. Sitcky: element does not move when scrolling
         < div className='flex justify-between items-center flex-col sticky top-5 h-[93vh]'>
-            {/* home icon */}
-            <Link to="/">
+
+            {/* home icon @note originally was <Link to="/">*/}
+            <Link to="/" onClick={handleHomeClick}>
                 <Icon styles="w-[52px] h-[52px] bg-[#2c2f32]" imgUrl={logo} />
             </Link>
 

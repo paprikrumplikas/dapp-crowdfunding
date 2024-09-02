@@ -11,7 +11,7 @@ const Profile = () => {
     const { address, contract, getUserCampaigns } = useStateContext();
 
 
-    // @note @learning nedded as cannot call an async function immediately within a useEffect (cannot await)
+    // @note @learning needed as cannot call an async function immediately within a useEffect (cannot await)
     const fetchCampaigns = async () => {
         setIsLoading(true);
         const data = await getUserCampaigns();

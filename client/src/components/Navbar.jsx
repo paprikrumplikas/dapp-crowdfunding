@@ -9,13 +9,42 @@ import { useStateContext } from '../context';
 import { metamaskWallet } from '@thirdweb-dev/react';
 
 const Navbar = () => {
-    const { connect, address } = useStateContext();
+    const { connect, address, contract, getCampaigns, setSearchResults, setSearchMade } = useStateContext();
 
     const navigate = useNavigate();
     const [isActive, setIsActive] = useState('dashboard');
     const [toggleDrawer, setToggleDrawer] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
 
 
+    // @custom needed for search func
+    const handleSearch = async () => {
+        const campaigns = await getCampaigns();
+        /**
+         * @learning @syntax 
+         * 1. filter method creates a new array with all elements that pas the test
+         * 2. Object.values returns an array of the given object's own enumerable property values. or example, if campaign is { name: 'Campaign1', description: 'Description1' }, Object.values(campaign) would return ['Campaign1', 'Description1'].
+         * 3. some is an array method that tests whether at least one element in the array passes the test implemented by the provided function.
+         * 4. If at least one value matches, the campaign is included in the filteredCampaigns array.
+         */
+        const filteredCampaigns = campaigns.filter((campaign) => {
+            return Object.values(campaign).some(value => value.toString().toLowerCase().includes(searchQuery.toLowerCase()));
+        });
+
+        setSearchResults(filteredCampaigns); // set to state
+        setSearchQuery(""); // reset
+        setSearchMade(true);
+
+        navigate("/");
+
+        return filteredCampaigns;
+    }
+
+    // @custom
+    const handleHomeClick = () => {
+        setSearchMade(false);
+        navigate("/");
+    }
 
     return (
         <div className='flex md:flex-row flex-col-reverse justify-between mb-[35px] gap-6'>
@@ -23,9 +52,24 @@ const Navbar = () => {
             {/** Wrapper for the input field + search icon combo*/}
             <div className='lg:flex-1 flex flex-row max-w-[458px] py-2 pl-4 pr-2 h-[52px] bg-[#1c1c24] rounded-full'>
                 {/** Input field */}
-                <input type="text" placeholder="Search for campaigns" className='flex w-full font-epilogue font-normal text-[14px] placeholder:text-[#4b5264] text-white bg-transparent outline-none' />
+                <input
+                    type="text"
+                    placeholder="Search for campaigns"
+                    className='flex w-full font-epilogue font-normal text-[14px] placeholder:text-[#4b5264] text-white bg-transparent outline-none'
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    // @note @learning needed so that search is executed also when enter is hit
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            handleSearch();
+                        }
+                    }}
+                />
                 {/** Wrapper for the search icon img */}
-                <div className='w-[72px] h-full rounded-[20px] bg-[#4acd8d] flex justify-center items-center cursor-pointer'>
+                <div
+                    className='w-[72px] h-full rounded-[20px] bg-[#4acd8d] flex justify-center items-center cursor-pointer'
+                    onClick={handleSearch}
+                >
                     <img
                         src={search}
                         alt="search"
@@ -34,7 +78,7 @@ const Navbar = () => {
                 </div>
             </div>
 
-            {/** Wrapper for Button on the right. By default, it is gonna be hidden by appears on small and larger devs. justify.end pushes children to the left*/}
+            {/** Wrapper for Button on the right. By default, it is gonna be hidden but appears on small and larger devs. justify.end pushes children to the left*/}
             <div className='sm:flex hidden flex-row justify-end gap-4'>
                 <CustomButton
                     btnType="button"
@@ -59,12 +103,13 @@ const Navbar = () => {
 
             {/** MOBILE MENU @learning */}
             <div className='sm:hidden flex justify-between items-center relative'>
-                {/** user profile icon */}
+                {/** home icon */}
                 <div className='w-[40px] h-[40px] rounded-[10px] bg-[#2c2f32] flex justify-center items-center cursor-pointer'>
                     <img
                         src={logo}
                         alt="user"
                         className='w-[60%] h-[60%] object-contain'
+                        onClick={handleHomeClick}
                     />
                 </div>
 
