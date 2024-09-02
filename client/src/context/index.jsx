@@ -69,9 +69,9 @@ export const StateContextProvider = ({ children }) => {
     }
 
 
-    const getUserCampaigns = async () => {
+    const getUserCampaigns = async (anyAddress) => {
         const allCampaigns = await getCampaigns();
-        const filteredCampaigns = allCampaigns.filter((campaign) => campaign.owner === address);
+        const filteredCampaigns = allCampaigns.filter((campaign) => campaign.owner === anyAddress);
 
         return filteredCampaigns;
     }

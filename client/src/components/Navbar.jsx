@@ -90,7 +90,7 @@ const Navbar = () => {
                     }}
                 />
 
-                <Link to="/profile">
+                <Link to={`/profile/${address}`}>
                     <div className='w-[52px] h-[52px] rounded-full bg-[#2c2f32] flex justify-center items-center cursor-pointer'>
                         <img
                             src={thirdweb}
@@ -167,7 +167,7 @@ const Navbar = () => {
                 </div>
             </div>
 
-        </div>
+        </div >
     )
 }
 

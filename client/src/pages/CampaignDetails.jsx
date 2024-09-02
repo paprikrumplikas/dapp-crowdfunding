@@ -80,6 +80,9 @@ const CampaignDetails = () => {
                 <div className='flex-[2] flex flex-col gap-[40px]'>
                     <div
                         className='cursor-pointer'
+                        onClick={() => {
+                            navigate(`/profile/${state.owner}`)
+                        }}
                     >
                         <h4 className='font-epilogue font-semibold text-[18px] text-white uppercase'>Creator</h4>
                         <div className='mt-[20px] flex flex-row items-center flex-wrap gap-[14px]'>

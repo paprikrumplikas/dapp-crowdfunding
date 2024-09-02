@@ -8,6 +8,7 @@ import { Route, Routes } from "react-router-dom";
 import { CampaignDetails, CreateCampaign, Profile, Home } from "./pages";
 import { Navbar, Sidebar } from "./components";
 
+
 const App = () => {
 	return (
 		<div className='relative sm:-8 p-4 bg-[#13131a] min-h-screen flex flex-row'>
@@ -22,7 +23,7 @@ const App = () => {
 				<Routes>
 					<Route path="/" element={<Home />} />
 					<Route path="/create-campaign" element={<CreateCampaign />} />
-					<Route path="/profile" element={<Profile />} />
+					<Route path="/profile/:addr" element={<Profile />} />
 					<Route path="/campaign-details/:id" element={<CampaignDetails />} />
 				</Routes>
 			</div>

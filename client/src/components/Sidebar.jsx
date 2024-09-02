@@ -39,7 +39,7 @@ const Icon = ({ styles, name, imgUrl, isActive, disabled, handleClick }) => (
 // @note not displayed on small devices
 const Sidebar = () => {
     const navigate = useNavigate();
-    const { setSearchMade } = useStateContext();
+    const { setSearchMade, address } = useStateContext();
     const [isActive, setIsActive] = useState('dashboard');
 
     // @custom associated with search functionality, needed so if we click the home icon, all campaigns get displayed, not only the search results
@@ -69,7 +69,11 @@ const Sidebar = () => {
                             handleClick={() => {
                                 if (!link.disabled) {
                                     setIsActive(link.name);
-                                    navigate(link.link);
+                                    if (link.link === "/profile") {
+                                        navigate(`/profile/${address}`)
+                                    } else {
+                                        navigate(link.link);
+                                    }
                                 }
                             }}
                         />
@@ -78,7 +82,7 @@ const Sidebar = () => {
 
                 {/** Sun icon placed separately from the rest. */}
                 <Icon
-                    sytles="bg-[#1c1c24] shadow-secondary"
+                    styles="bg-[#1c1c24] shadow-secondary"
                     imgUrl={sun}
                 />
             </div>

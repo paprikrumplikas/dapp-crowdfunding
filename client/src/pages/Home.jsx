@@ -30,7 +30,7 @@ const Home = () => {
     // displays are similar on the Home and Profile pages so we created a reusable component
     return (
         <DisplayCampaigns
-            title={!searchMade ? "All campaigns" : "Search results"}
+            title={!searchMade ? "All active campaigns" : "Search results"}
             isLoading={isLoading}
             campaigns={campaigns}
         />
