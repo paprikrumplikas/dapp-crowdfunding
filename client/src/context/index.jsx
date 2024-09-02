@@ -24,7 +24,6 @@ export const StateContextProvider = ({ children }) => {
 
 
     const publishCampaign = async (form) => {
-
         try {
             // we have to pass them in the rifht order
             const data = await (createCampaign({
@@ -75,6 +74,32 @@ export const StateContextProvider = ({ children }) => {
     }
 
 
+    const donate = async (pid, amount) => {
+        // @learning @crucial the 2nd param is an object, representing tx options. Value field specifies the ether to be sent with the tc
+        const data = await contract.call('donateToCampaign', [pid], { value: ethers.utils.parseEther(amount) });
+        return data;
+    }
+
+
+    const getDonations = async (pId) => {
+
+        // @note this returns 2 arrays. donations[0] references the donators array, donations[1] references the donations array
+        const donations = await contract.call('getDonators', [pId]);
+        const numberOfDonations = donations[0].length;
+
+        const parsedDonations = [];
+
+        for (let i = 0; i < numberOfDonations; i++) {
+            parsedDonations.push({
+                donator: donations[0][i],
+                donation: ethers.utils.formatEther(donations[1][i].toString())
+            })
+        }
+
+        return parsedDonations;
+    }
+
+
     return (
         <StateContext.Provider
             value={{
@@ -84,6 +109,8 @@ export const StateContextProvider = ({ children }) => {
                 createCampaign: publishCampaign, // renaming publichCampaign to cC
                 getCampaigns,
                 getUserCampaigns,
+                donate,
+                getDonations,
             }}
         >
             {/** @crucial rendering children here */}

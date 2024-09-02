@@ -19,7 +19,7 @@ const Home = () => {
         setIsLoading(false);
     }
 
-    // @note @learning cannot call an async function immediately within a useEffect (cannot await)
+    // @note @learning @crucial cannot call an async function immediately within a useEffect (cannot await)
     useEffect(() => {
         if (contract) {
             fetchCampaigns();

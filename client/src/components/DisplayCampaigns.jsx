@@ -4,12 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import { loader } from '../assets';
 import FundCard from "./FundCard";
 
+
 const DisplayCampaigns = ({ title, isLoading, campaigns }) => {
     const navigate = useNavigate();
 
     // to increase code readability
     const handleNavigate = (campaign) => {
-        // @note @learning @syntax new react router allows one to pass state directly through routing
+        // @note @learning @syntax @crucial new react router allows one to pass state directly through routing
         // this allows one to pass data to the target route without including it in the url
         // The passed state can be accessed in the target component using the useLocation hook from react-router-dom.
         // When you navigate to a new route, the component unmounts, and its props are lost. By passing state through navigation, you ensure the data is available in the new route.
@@ -36,7 +37,7 @@ const DisplayCampaigns = ({ title, isLoading, campaigns }) => {
 
                 {/** If it is not loading and the length is 0, display that there are no campaigns */}
                 {!isLoading && campaigns.length === 0 && (
-                    <p className='font-epilogue font-semibold text-[14px] leasing-[30px] text-[#818183]'>
+                    <p className='font-epilogue font-semibold text-[14px] leading-[30px] text-[#818183]'>
                         You have not created any campaigns yet.
                     </p>
                 )}

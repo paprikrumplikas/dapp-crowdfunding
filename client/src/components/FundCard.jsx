@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { tagType, thirdweb } from '../assets';
-import { daysLeft } from "../utils";
+import { daysLeft, calculateBarPercentage } from "../utils";
 
 // @note @learning in DisplayCampaings where FundCard is rendered, we spread out all of the campaign properties
 // so now we can get each of them through props
@@ -14,11 +14,12 @@ const FundCard = ({ owner, title, description, target, deadline, amountCollected
             <img
                 src={image}
                 alt="img"
-                className='w-full h-[158px] object-cover object-[50%_30%] rounded-[15px]'
+                className='w-full h-[288px] object-cover object-[50%_30%] rounded-[15px]'
             />
 
             {/** Wrapper for the contect */}
             <div className='flex flex-col p-4'>
+
                 {/** block for the category image and category */}
                 <div className='flex flex-row items-center mb-[18px]'>
                     <img
@@ -26,8 +27,11 @@ const FundCard = ({ owner, title, description, target, deadline, amountCollected
                         alt="tag"
                         className='w-[17px] h-[17px] object-contain'
                     />
+
                     <p className='ml-[12px] mt-[2px] font-epilogue font-medium text-[12px] text-[#808191]'>Fun</p>
                 </div>
+
+
 
                 {/** block for the title and decsitption*/}
                 <div className='block'>
