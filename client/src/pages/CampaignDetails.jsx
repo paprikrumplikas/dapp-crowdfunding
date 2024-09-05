@@ -117,42 +117,54 @@ const CampaignDetails = () => {
             <div className='mt-[60px] flex lg:flex-row flex-col gap-5'>
                 {/** smaller wrapper - 1 */}
                 <div className='flex-[2] flex flex-col gap-[40px]'>
-                    <div
-                        className='cursor-pointer'
-                        onClick={() => {
-                            navigate(`/profile/${state.owner}`)
-                        }}
-                    >
-                        <h4 className='font-epilogue font-semibold text-[18px] text-white uppercase'>Creator</h4>
-                        <div className='mt-[20px] flex flex-row items-center flex-wrap gap-[14px]'>
-                            {/** img put in a wrapper so we can give it a backgorund */}
-                            <div className='w-[52px] h-[52px] flex items-center justify-center rounded-full bg-[#2c2f32]'>
-                                <img
-                                    src={thirdweb}
-                                    alt="user"
-                                    className='w-[60%] h-[60%] object-contain'
-                                />
-                            </div>
 
-                            {/** container for stats */}
-                            <div>
-                                <h4 className='font-epilogue font-semibold text-[14px] text-white break-all'>{state.owner}</h4>
-                                <div className='flex flex-row items-center'>
-                                    <p className='mt-[4px] font-epilogue font-normal text-[12px] text-[#808191]'>
-                                        {/** If isLoading, then show the loading img */}
-                                        {campaignCount}
-                                    </p>
-                                    {isDataLoading && (
-                                        <img
-                                            src={loader}
-                                            alt="loader"
-                                            className='w-[20px] h-[20px] object-contain'
-                                        />
-                                    )}
+                    <div className='flex flex-row justify-between'>
+
+                        {/** Container for title */}
+                        <div className='flex-grow'>
+                            <h4 className='font-epilogue font-semibold text-[18px] text-white uppercase'>Campaign Title</h4>
+                            <p className='mt-[20px] font-epilogue font-normal text-[16px] text-[#808191] leading-[26px] text-justify'>{state.title}</p>
+                        </div>
+
+                        {/** Container for clickabla owner data */}
+                        <div
+                            className='cursor-pointer flex-grow'
+                            onClick={() => {
+                                navigate(`/profile/${state.owner}`)
+                            }}
+                        >
+                            <h4 className='font-epilogue font-semibold text-[18px] text-white uppercase'>Creator</h4>
+                            <div className='mt-[20px] flex flex-row items-center flex-wrap gap-[14px] justify-start'>
+                                {/** img put in a wrapper so we can give it a backgorund */}
+                                <div className='w-[52px] h-[52px] flex items-center justify-center rounded-full bg-[#2c2f32]'>
+                                    <img
+                                        src={thirdweb}
+                                        alt="user"
+                                        className='w-[60%] h-[60%] object-contain'
+                                    />
+                                </div>
+
+                                {/** container for owner stats */}
+                                <div>
+                                    <h4 className='font-epilogue font-semibold text-[14px] text-white break-all'>{state.owner}</h4>
+                                    <div className='flex flex-row items-center'>
+                                        <p className='mt-[4px] font-epilogue font-normal text-[12px] text-[#808191]'>
+                                            {/** If isLoading, then show the loading img */}
+                                            {campaignCount}
+                                        </p>
+                                        {isDataLoading && (
+                                            <img
+                                                src={loader}
+                                                alt="loader"
+                                                className='w-[20px] h-[20px] object-contain'
+                                            />
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
 
 
                     <div>

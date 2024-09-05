@@ -1,12 +1,15 @@
 // contains all web3-related logic
 // whole app will need to be wrapped with this context so every page can use it
 
-import React, { useContext, createContext, useState } from "react";
+import React, { useContext, createContext, useState, useEffect } from "react";
 
 import { useAddress, useContract, useConnect, useContractWrite } from "@thirdweb-dev/react";
 
 //import { ethers6Adapter } from "@thirdweb-dev/react";
 import { ethers } from "ethers";
+
+import { metamaskWallet } from '@thirdweb-dev/react';
+
 
 // Creates a context object.  Context in React provides a way to pass data through the component tree without having to pass props down manually at every level.
 const StateContext = createContext();
@@ -18,8 +21,12 @@ export const StateContextProvider = ({ children }) => {
     const { contract } = useContract("0xBa0Cf034b5e50499A845bba5597Ee02354041F31");
     const { mutateAsync: createCampaign } = useContractWrite(contract, "createCampaign");
     const address = useAddress();
+    // @custom
+    // const [activeAccount, setActiveAccount] = useState(null);
     // with this, we can connect a wallet. @note @learning useMetamask() is depracated
-    // with useConnect, we need to specify the wallet, like useConnect(metamaskWallet())
+    // with useConnect, we need to specify the wallet, like useConnect(metamaskWallet()), see in Navbar
+    // @crucial If you have a wallet connected to your dApp, but it's not the active wallet in your browser extension, the useAddress() hook should still return the address of the connected wallet, not the active one in the extension.
+    // @bug this cases an issue that if the active account is unconnected everything will be displayed as if the connected account were active
     const connect = useConnect();
 
     const [searchResults, setSearchResults] = useState([]); // @custom needed for the search functionality

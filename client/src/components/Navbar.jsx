@@ -90,15 +90,25 @@ const Navbar = () => {
                     }}
                 />
 
-                <Link to={`/profile/${address}`}>
-                    <div className='w-[52px] h-[52px] rounded-full bg-[#2c2f32] flex justify-center items-center cursor-pointer'>
+                {address ? (
+                    <Link to={`/profile/${address}`}>
+                        <div className='w-[52px] h-[52px] rounded-full bg-[#2c2f32] flex justify-center items-center cursor-pointer'>
+                            <img
+                                src={thirdweb}
+                                alt="user"
+                                className='w-[60%] h-[60%] object-contain'
+                            />
+                        </div>
+                    </Link>
+                ) : (
+                    <div className='w-[52px] h-[52px] rounded-full bg-[#2c2f32] flex justify-center items-center'>
                         <img
                             src={thirdweb}
                             alt="user"
-                            className='w-[60%] h-[60%] object-contain'
+                            className='w-[60%] h-[60%] object-contain opacity-50'
                         />
                     </div>
-                </Link>
+                )}
             </div>
 
             {/** MOBILE MENU @learning */}

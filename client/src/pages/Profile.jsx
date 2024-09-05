@@ -8,7 +8,7 @@ import { useParams } from 'react-router-dom';
 
 const Profile = () => {
 
-    const { addr } = useParams(); // @custom
+    const { addr } = useParams(); // @custom needed as we do not necessary want to fetch the campaigns of connected users, but others as well
 
 
     const [isLoading, setIsLoading] = useState(false);
@@ -31,7 +31,7 @@ const Profile = () => {
         if (contract) {
             fetchCampaigns(addr);
         }
-    }, [address, contract])
+    }, [address, contract, addr])
 
 
     // displays are similar on the Home and Profile pages so we created a reusable component

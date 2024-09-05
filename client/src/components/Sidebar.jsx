@@ -67,12 +67,14 @@ const Sidebar = () => {
                             {...link}
                             isActive={isActive}
                             handleClick={() => {
-                                if (!link.disabled) {
-                                    setIsActive(link.name);
-                                    if (link.link === "/profile") {
-                                        navigate(`/profile/${address}`)
-                                    } else {
-                                        navigate(link.link);
+                                if (address) {
+                                    if (!link.disabled) {
+                                        setIsActive(link.name);
+                                        if (link.link === "/profile") {
+                                            navigate(`/profile/${address}`)
+                                        } else {
+                                            navigate(link.link);
+                                        }
                                     }
                                 }
                             }}
