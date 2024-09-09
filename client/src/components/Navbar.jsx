@@ -9,7 +9,9 @@ import { useStateContext } from '../context';
 import { metamaskWallet } from '@thirdweb-dev/react';
 
 const Navbar = () => {
-    const { connect, address, contract, getCampaigns, setSearchResults, setSearchMade } = useStateContext();
+    const [, forceUpdate] = useState();
+
+    const { connect, address, contract, getCampaigns, setSearchResults, setSearchMade, ethereum } = useStateContext();
 
     const navigate = useNavigate();
     const [isActive, setIsActive] = useState('dashboard');
@@ -45,6 +47,7 @@ const Navbar = () => {
         setSearchMade(false);
         navigate("/");
     }
+
 
     return (
         <div className='flex md:flex-row flex-col-reverse justify-between mb-[35px] gap-6'>
@@ -82,11 +85,25 @@ const Navbar = () => {
             <div className='sm:flex hidden flex-row justify-end gap-4'>
                 <CustomButton
                     btnType="button"
-                    title={address ? 'Create a campaign' : 'Connect wallet'}
-                    styles={address ? 'bg-[#1dc071]' : 'bg-[#8c6dfd]'}
+                    // @learning this is not good: title={window.ethereum ? (address ? 'Create a campaign' : 'Connect wallet') : 'Install Metamask to interact'}
+                    // The issue here is that window.ethereum is being checked at runtime in the browser. 
+                    // However, if Metamask is not installed, window.ethereum will be undefined, which is a falsy value. 
+                    // In JavaScript, when you use a ternary operator with a falsy condition, it will always choose the second option.
+                    title={typeof ethereum == 'undefined'
+                        ? 'Install Metamask'
+                        : (address ? 'Create a campaign' : 'Connect wallet')}
+                    styles={typeof ethereum === 'undefined'
+                        ? 'bg-[#FF6B6B]'
+                        : (address ? 'bg-[#1dc071]' : 'bg-[#8c6dfd]')}
                     handleClick={() => {
-                        if (address) navigate('create-campaign')
-                        else connect(metamaskWallet());
+                        // @custom @learning @crucial
+                        if (!ethereum) {
+                            window.open("https://metamask.io/download/", "_blank");
+                        } else if (address) {
+                            navigate('create-campaign');
+                        } else {
+                            connect(metamaskWallet());
+                        }
                     }}
                 />
 
@@ -122,6 +139,8 @@ const Navbar = () => {
                         onClick={handleHomeClick}
                     />
                 </div>
+
+
 
                 {/** hamburger menu icon on the right */}
                 <img
@@ -165,11 +184,21 @@ const Navbar = () => {
                     <div className='flex mx-4'>
                         <CustomButton
                             btnType="button"
-                            title={address ? 'Create a campaign' : 'Connect wallet'}
-                            styles={address ? 'bg-[#1dc071]' : 'bg-[#8c6dfd]'}
+                            title={typeof ethereum == 'undefined'
+                                ? 'Install Metamask'
+                                : (address ? 'Create a campaign' : 'Connect wallet')}
+                            styles={typeof ethereum === 'undefined'
+                                ? 'bg-[#FF6B6B]'
+                                : (address ? 'bg-[#1dc071]' : 'bg-[#8c6dfd]')}
                             handleClick={() => {
-                                if (address) navigate('create-campaign')
-                                else connect(metamaskWallet());
+                                // @custom @learning @crucial
+                                if (!ethereum) {
+                                    window.open("https://metamask.io/download/", "_blank");
+                                } else if (address) {
+                                    navigate('create-campaign');
+                                } else {
+                                    connect(metamaskWallet());
+                                }
                             }}
                         />
 

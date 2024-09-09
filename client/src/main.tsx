@@ -13,7 +13,11 @@ import { StateContextProvider } from "./context";
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <ThirdwebProvider activeChain="sepolia">
+    {/** @learning @critical thirdweb client ID is needed to access thirdweb services. Client ID is stored at client/.env */}
+    <ThirdwebProvider
+      activeChain="sepolia"
+      clientId={import.meta.env.VITE_THIRDWEB_CLIENT_ID}
+    >
       <Router>
         <StateContextProvider>
           <App />
