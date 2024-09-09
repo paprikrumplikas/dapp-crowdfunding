@@ -6,6 +6,8 @@ import FundCard from "./FundCard";
 
 import { useStateContext } from '../context';   // @custom for search func
 
+import Tilt from "react-parallax-tilt";
+
 
 
 const DisplayCampaigns = ({ title, isLoading, campaigns, activeOrClosed }) => {
@@ -85,11 +87,14 @@ const DisplayCampaigns = ({ title, isLoading, campaigns, activeOrClosed }) => {
 
                 {/** @learning @crucial function is being used to iterate over each campaign in the campaigns array. For each campaign, a FundCard component is being rendered. */}
                 {!isLoading && campaigns.length > 0 && campaignsToDisplay.map((campaign) =>
-                    <FundCard
-                        key={campaign.pId}
-                        {...campaign}
-                        handleClick={() => handleNavigate(campaign)}
-                    />)}
+                    <Tilt>
+                        <FundCard
+                            key={campaign.pId}
+                            {...campaign}
+                            handleClick={() => handleNavigate(campaign)}
+                        />
+                    </Tilt>
+                )}
             </div>
 
 

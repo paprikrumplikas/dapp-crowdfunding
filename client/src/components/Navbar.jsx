@@ -9,7 +9,6 @@ import { useStateContext } from '../context';
 import { metamaskWallet } from '@thirdweb-dev/react';
 
 const Navbar = () => {
-    const [, forceUpdate] = useState();
 
     const { connect, address, contract, getCampaigns, setSearchResults, setSearchMade, ethereum } = useStateContext();
 
