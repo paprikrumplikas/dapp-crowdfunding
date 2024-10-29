@@ -1,12 +1,33 @@
-1. WEB3 setup
+0. Base info:
+   1. Contract deployed to Sepolia at address 0xBa0Cf034b5e50499A845bba5597Ee02354041F31
+   2. deployer 0x947A3D447E75f07583943Aa9975DEB0ef18439b4 (account: PP MM)
+   3. 
+
+___________________________________________________________________________________________________________
+
+
+
+1. WEB3 setup (regged w account: PP MM)
    1. npx thirdweb@latest create --contract
       1. /src
       2. Hardhat
       3. empty contract
    2. If you are using a Node.js project, you should install the dotenv package to automatically load environment variables from a .env file.
       in the web3 folder: npm install dotenv
-   3. add thridweb secret key to package.json here:
-      "deploy": "npx thirdweb@latest deploy -k <SECRET KEY>",
+   3. Create an API KEY on thirdweb, this will output a CLIENT ID and a SECRET_KEY
+   More info: https://portal.thirdweb.com/account/api-keys 
+   Later on this cannot be retrieved but a few cahrs can be checked at MY API KEYs -> click on it...
+      1. @crucial define THIRDWEB_SECRET_KEY in the .env file, do not expose
+      2. add thridweb secret key (not directly but by referencing .env) to web3/package.json here (@note this package.json is in the web3 folder):
+      "deploy": "npx thirdweb@latest deploy -k ${THIRDWEB_SECRET_KEY}" 
+      3. add thirdweb client ID to client/.env as VITE_THIRDWEB_CLIENT_ID=...
+      @crucial @learning  VITE_ prefix is a MUST: it used for Vite applications to expose environment variables to the client-side code.
+      4. In main, reference this client ID when wrapping the app with the ThirdWebProvider tag
+
+                <ThirdwebProvider
+                     activeChain="sepolia"
+                     clientId={import.meta.env.VITE_THIRDWEB_CLIENT_ID}
+                  >
 
 2. INIT APP
    1. In the client folder: npx thirdweb create --app
@@ -88,8 +109,23 @@
    
 
 3. START DEVELOPING APP.TSX
-   1. Create basic application layou
+   1. Create basic application layout
 
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+TOASTIFY: @learning @crucial
+
+1. t's used to display non-blocking notifications (toasts) in React applications.
+2. You started using react-toastify instead of a standard JavaScript alert for several important reasons: 
+   1. Non-blocking: Toasts are non-blocking notifications, meaning they don't interrupt the user's interaction with your application. Alerts, on the other hand, are modal and block further interaction until dismissed.
+   2. Better user experience: Toasts provide a more modern and less intrusive way to show notifications. They can appear and disappear smoothly without disrupting the user's workflow.
+   3. Customization: React-toastify offers extensive customization options. You can control the appearance, position, duration, and behavior of notifications, which isn't possible with standard alerts.
+   4. Multiple notifications: You can show multiple toasts at once, stacking them neatly, whereas only one alert can be shown at a time.
+   5. Different types of notifications
+   6. ...
 
 
 
