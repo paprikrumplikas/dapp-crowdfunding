@@ -7,4 +7,8 @@ export default defineConfig({
   server: {
     host: 'localhost',
   },
+  build: {
+    // ... other build options ...
+    copyPublicDir: true,
+  },
 });
